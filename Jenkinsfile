@@ -7,11 +7,23 @@ pipeline {
   }
 
   stages {
-    stage('Checkout') { steps { checkout scm } }
-    stage('Build') { steps { sh 'mvn clean package -DskipTests' } }
-    stage('Push JAR') { steps { sh 'mvn deploy -DskipTests' } }
-    stage('Docker Build') { steps { sh 'docker build -t $IMAGE:$VERSION .' } }
-    stage('Docker Push') {
+    stage('Checkout') {
+      steps { checkout scm }
+    }
+
+    stage('Build JAR') {
+      steps { sh 'mvn clean package -DskipTests' }
+    }
+
+    stage('Push JAR to Nexus') {
+      steps { sh 'mvn deploy -DskipTests' }
+    }
+
+    stage('Build Docker Image') {
+      steps { sh 'docker build -t $IMAGE:$VERSION .' }
+    }
+
+    stage('Push Docker Image') {
       steps {
         withCredentials([usernamePassword(
           credentialsId: 'nexus-creds',
