@@ -2,6 +2,6 @@ FROM eclipse-temurin:17-jdk-jammy
 
 WORKDIR /app
 
-COPY target/order-service-1.0.jar app.jar
+COPY target/app.jar app.jar
 
 ENTRYPOINT ["java","-jar","app.jar"]
